@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plateforme intelligente d'aide au diagnostic vétérinaire aviaire</title>
+<meta name="description" content="Outil d'aide à la décision pour le diagnostic différentiel des affections respiratoires en élevage avicole, calibré sur l'épidémiologie marocaine.">
+<meta name="author" content="EL ORCH Youssef">
+<meta property="og:title" content="Plateforme intelligente d'aide au diagnostic vétérinaire aviaire">
+<meta property="og:description" content="Système d'aide au diagnostic différentiel des affections respiratoires en élevage avicole.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- ================= NAVIGATION ================= -->
+<nav class="nav">
+  <div class="wrap">
+    <a class="marque" href="index.html">Diagnostic aviaire</a>
+    <button class="burger" id="burger" aria-label="Menu">☰</button>
+    <ul id="menu">
+      <li><a class="lien" href="#probleme">Problème</a></li>
+      <li><a class="lien" href="#solution">Solution</a></li>
+      <li><a class="lien" href="#objectifs">Objectifs</a></li>
+      <li><a class="lien" href="#modules">Modules</a></li>
+      <li><a class="lien" href="#validation">Validation</a></li>
+      <li><a class="lien" href="outil.html">Lancer l'outil</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ================= ACCUEIL ================= -->
+<header class="hero">
+  <div class="wrap">
+    <p class="sur">Institut Agronomique et Vétérinaire Hassan II — Fiche de projet</p>
+    <h1>Plateforme intelligente d'aide au diagnostic vétérinaire aviaire</h1>
+    <p class="chapeau">Un outil d'aide à la décision pour le diagnostic différentiel des affections respiratoires en élevage avicole, calibré sur l'épidémiologie marocaine.</p>
+    <div class="boutons">
+      <a class="btn" href="outil.html">Lancer l'outil de diagnostic</a>
+      <a class="btn creux" href="assets/doc/fiche-projet.pdf">Télécharger la fiche (PDF)</a>
+    </div>
+    <div class="meta">
+      <span>Réalisé par EL ORCH Youssef</span>
+      <span>Année universitaire 2025 – 2026</span>
+      <span>Département de Pathologie et Santé Publique Vétérinaire</span>
+    </div>
+  </div>
+</header>
+
+<!-- ================= 1 ================= -->
+<section id="probleme">
+  <div class="wrap">
+    <p class="num">01</p>
+    <h2>Le problème posé</h2>
+    <p>Les affections respiratoires de la volaille se ressemblent toutes. Bronchite infectieuse, maladie de Newcastle, influenza aviaire, coryza, mycoplasmose, métapneumovirose, ORT et colibacillose donnent les mêmes éternuements, les mêmes râles, le même jetage et souvent les mêmes lésions. Pris isolément, aucun signe ne permet de trancher.</p>
+    <p>Trois éléments aggravent cette difficulté. D'abord, les co-infections sont fréquentes dans nos élevages, en particulier l'association entre la bronchite infectieuse et l'influenza H9N2 : chercher une cause unique conduit donc régulièrement à une conclusion incomplète. Ensuite, l'enjeu réglementaire est lourd, puisque confondre une simple cause d'ambiance avec une maladie à déclaration obligatoire expose soit à un retard de notification, soit à une alerte injustifiée coûteuse pour la filière. Enfin, le praticien décide en visite, alors que le résultat de laboratoire ne lui parviendra que plusieurs jours plus tard, bien après que le traitement a été engagé.</p>
+    <p>Il en résulte une situation où le raisonnement doit être probabiliste : plutôt que de désigner une maladie, il faut classer les hypothèses de la plus vraisemblable à la moins vraisemblable, et savoir lesquelles on peut écarter avec certitude.</p>
+  </div>
+</section>
+
+<!-- ================= 2 ================= -->
+<section id="solution">
+  <div class="wrap">
+    <p class="num">02</p>
+    <h2>La solution proposée</h2>
+    <p>Le projet consiste à développer un site internet d'aide au diagnostic différentiel en pathologie aviaire, utilisable pendant la visite d'élevage et pendant l'autopsie.</p>
+    <p>Le principe est simple. L'utilisateur répond à une série de questions sur le lot : espèce, âge, mortalité, signes observés, conditions d'ambiance, vaccinations réalisées, réponse aux traitements, et lésions constatées. Chaque réponse modifie le score attribué à chacune des maladies possibles. Certaines réponses renforcent une hypothèse, d'autres l'affaiblissent, et quelques-unes l'éliminent lorsqu'elle devient impossible — un poussin de cinq jours ne fait pas une laryngotrachéite, une dinde ne fait pas de bronchite infectieuse. Le classement se met à jour à chaque réponse et l'utilisateur voit en permanence quelles maladies restent en lice et lesquelles ont été écartées, avec le motif de leur élimination.</p>
+
+    <figure>
+      <img src="assets/img/fig1-raisonnement.png" alt="Schéma du raisonnement pondéré : les informations recueillies modifient le score de chaque hypothèse et déclenchent une alerte en cas de maladie à déclaration obligatoire.">
+      <figcaption>Figure 1 — Principe du raisonnement : les informations recueillies modifient le score de chaque hypothèse.</figcaption>
+    </figure>
+
+    <p>Deux éléments distinguent ce projet d'un simple guide de diagnostic. Le premier est son adaptation au contexte marocain : les probabilités de départ attribuées à chaque maladie reposent sur les données de prévalence nationales, ce qui place la bronchite infectieuse et l'influenza H9N2 au premier plan là où un outil étranger proposerait un tout autre classement. Le second est la sécurisation des maladies à déclaration obligatoire : dès qu'une combinaison de signes évoque une influenza hautement pathogène ou un Newcastle vélogène, le questionnaire s'interrompt, une alerte s'affiche et la conduite réglementaire est rappelée.</p>
+
+    <div class="boutons" style="margin-top:26px">
+      <a class="btn" href="outil.html">Essayer le questionnaire</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 3 ================= -->
+<section id="objectifs">
+  <div class="wrap">
+    <p class="num">03</p>
+    <h2>Les objectifs</h2>
+    <ul class="objectifs">
+      <li><b>Aider au diagnostic différentiel</b>Classer les hypothèses de façon reproductible et réduire l'effet d'ancrage sur la première impression clinique, principale source d'erreur en médecine de troupeau.</li>
+      <li><b>Structurer le raisonnement</b>Offrir aux étudiants et aux jeunes praticiens un cadre méthodologique explicite, où l'on voit non seulement la conclusion mais le chemin qui y mène.</li>
+      <li><b>Orienter les examens complémentaires</b>Indiquer quels prélèvements réaliser et quels tests demander au laboratoire, ce qui constitue le gain le plus concret pour le praticien comme pour l'éleveur.</li>
+      <li><b>Constituer une base de cas documentés</b>Rassembler progressivement des observations de terrain confrontées, lorsque c'est possible, aux résultats de laboratoire.</li>
+      <li><b>Cartographier les maladies</b>Offrir une carte des cas recensés permettant de voir, région par région et période par période, quelles affections circulent le plus. Cet accès reste réservé au médecin vétérinaire abonné ; l'éleveur n'est quant à lui informé que pour les maladies hautement pathogènes à déclaration obligatoire et pour les zoonoses.</li>
+      <li><b>Améliorer l'outil dans le temps</b>Ajuster progressivement les scores à partir des cas dont le diagnostic a été confirmé au laboratoire.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= 4 ================= -->
+<section id="modules">
+  <div class="wrap">
+    <p class="num">04</p>
+    <h2>Le site et ses modules</h2>
+
+    <figure>
+      <img src="assets/img/fig2-architecture.png" alt="Organisation générale du site : questionnaire, VetBot, VetoCam et carte des maladies, reliés à une base de cas documentés.">
+      <figcaption>Figure 2 — Organisation générale du site et de ses quatre modules.</figcaption>
+    </figure>
+
+    <h3>Le questionnaire de diagnostic</h3>
+    <p>C'est le cœur du dispositif. Il comporte quatorze questions couvrant les commémoratifs, les signes cliniques, l'ambiance, le statut vaccinal et les lésions d'autopsie, et travaille sur dix-sept hypothèses respiratoires. Les premières questions portent volontairement sur des informations que l'éleveur connaît avec certitude — l'espèce, l'âge, la mortalité — car ce sont elles qui éliminent le plus d'hypothèses. Les questions les plus sujettes à interprétation, comme l'aspect d'un écoulement, viennent ensuite et pèsent moins lourd. Des versions consacrées aux troubles digestifs, nerveux et aux chutes de ponte sont prévues.</p>
+
+    <h3>VetBot, l'assistant pédagogique</h3>
+    <p>VetBot accompagne l'utilisateur pendant et après le questionnaire. Il explique pourquoi telle question est posée, pourquoi telle hypothèse a été retenue ou écartée, et rappelle les éléments de physiopathologie ou de conduite à tenir correspondants. Au-delà de cette fonction, il permet à l'utilisateur de poser librement ses propres questions sur le diagnostic aviaire, d'approfondir un point, de comparer deux entités pathologiques, et de rassembler ainsi progressivement la matière d'un travail personnel de recherche.</p>
+
+    <div class="encart">
+      <p class="t">Principe retenu</p>
+      <p>L'assistant explique le résultat du questionnaire, il ne le produit pas et ne peut pas le contredire. Le raisonnement diagnostique reste ainsi vérifiable.</p>
+    </div>
+
+    <h3>VetoCam, images et bibliothèque lésionnelle</h3>
+    <p>L'utilisateur peut déposer la photographie d'une lésion — organe, trachée, sac aérien, fientes. Le système en produit une description de ce qui est visible : couleur, texture, topographie, distribution. Cette description ne nomme jamais de maladie et n'est prise en compte qu'après confirmation par l'utilisateur, qui reste seul juge. Cette précaution est indispensable, car une altération post-mortem peut facilement être décrite comme une lésion inflammatoire.</p>
+    <p>Chaque image, une fois annotée et validée par un vétérinaire, vient enrichir une bibliothèque iconographique classée par organe, lésion, espèce et diagnostic. Il n'existe pas aujourd'hui d'iconographie lésionnelle aviaire documentée en contexte marocain et accessible aux étudiants : cette collection constitue à elle seule une ressource pédagogique durable.</p>
+
+    <h3>La carte des maladies et l'interface arabe</h3>
+    <p>La carte présente, à partir des cas déclarés et rendus anonymes, la répartition régionale des foyers et le classement des pathologies les plus fréquentes. Elle est destinée aux vétérinaires, qui y voient ce qui circule dans leur secteur, et à la filière, qui y trouve un indicateur de tendance actualisé.</p>
+    <p>L'accès de l'éleveur est délibérément restreint : il ne porte que sur les maladies hautement pathogènes à déclaration obligatoire et sur les zoonoses. Ces informations relèvent en effet de l'alerte sanitaire collective et de la protection de la santé publique, alors que la diffusion large des autres foyers exposerait les élevages concernés à un préjudice commercial injustifié.</p>
+    <p>Cette carte n'est pas en libre accès sur le site : elle est intégrée au forfait du médecin vétérinaire abonné. Une version restreinte, limitée aux statistiques de fréquentation du site et ne comportant aucune donnée épidémiologique par région, peut par ailleurs être fournie sur commande à des tiers intéressés.</p>
+    <p>L'interface en langue arabe vise, quant à elle, les praticiens qui travaillent quotidiennement dans cette langue. Elle porte sur les questions du formulaire, les intitulés de signes cliniques et les consignes de prélèvement, la terminologie scientifique des entités pathologiques et des examens de laboratoire restant inchangée.</p>
+
+    <h3>Les accès</h3>
+    <div class="tab">
+      <table>
+        <thead>
+          <tr><th>Profil</th><th>Ce à quoi il accède</th><th>Particularité</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="profil">Éleveur</td>
+            <td>Réponse aux questions du formulaire, limitée à un signalement</td>
+            <td>N'est informé que si les réponses évoquent une maladie hautement pathogène à déclaration obligatoire ou une zoonose ; aucun autre détail diagnostique ne lui est communiqué</td>
+          </tr>
+          <tr>
+            <td class="profil">Étudiant</td>
+            <td>Questionnaire, synthèse des hypothèses, prélèvements recommandés</td>
+            <td>Permet de réaliser des diagnostics complets à but pédagogique, avec le mode détaillé qui déroule le raisonnement et le motif d'élimination de chaque hypothèse</td>
+          </tr>
+          <tr>
+            <td class="profil">Médecin vétérinaire<br>(abonné)</td>
+            <td>Accès illimité : diagnostic des maladies, tests à demander, conduite à tenir, historique des cas, rapports exportables, suivi de ses élevages, carte des maladies incluse dans le forfait</td>
+            <td>Abonnement avec une période d'essai gratuite au démarrage</td>
+          </tr>
+          <tr>
+            <td class="profil">Administrateur</td>
+            <td>Scores, comptes utilisateurs, base de cas, bibliothèque d'images</td>
+            <td>Toute modification des scores est datée et conservée, afin qu'un résultat rendu à une date donnée reste vérifiable</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 5 ================= -->
+<section id="validation">
+  <div class="wrap">
+    <p class="num">05</p>
+    <h2>Validation scientifique</h2>
+    <p>Aucun outil d'aide à la décision ne peut être diffusé sans que sa fiabilité ait été établie. Une étude prospective est donc prévue, dont le principe est simple : sur des lots présentant des signes respiratoires, le questionnaire est rempli avant que le moindre résultat de laboratoire ne soit connu, l'impression clinique du praticien est notée en parallèle, et les orientations produites sont ensuite confrontées au diagnostic effectivement confirmé.</p>
+
+    <figure>
+      <img src="assets/img/fig3-validation.png" alt="Principe de l'étude de validation : le questionnaire, l'impression clinique et les analyses de laboratoire convergent vers une confrontation dont découlent trois indicateurs.">
+      <figcaption>Figure 3 — Principe de l'étude de validation : comparer l'orientation de l'outil au diagnostic confirmé.</figcaption>
+    </figure>
+
+    <p>Le critère principal est la détection des maladies à déclaration obligatoire, qui doit être quasi parfaite : une seule suspicion manquée suffirait à disqualifier le dispositif. Les critères secondaires portent sur la justesse du classement produit et sur le gain apporté par rapport à la seule impression clinique initiale. Cette validation constitue le préalable à toute diffusion et fournira la caution scientifique nécessaire aux partenariats institutionnels.</p>
+    <p>Une fois cette base de cas confirmés réunie, une perspective complémentaire consisterait à entraîner, en parallèle du système à pondérations, un modèle de machine learning et à comparer ses prédictions au diagnostic de référence. Il s'agit à ce stade d'une simple perspective d'évolution, envisageable seulement après que l'étude prospective aura confirmé la fiabilité du système expert lui-même.</p>
+  </div>
+</section>
+
+<!-- ================= 6 ================= -->
+<section id="amelioration">
+  <div class="wrap">
+    <p class="num">06</p>
+    <h2>Amélioration progressive de l'outil</h2>
+    <p>Les scores utilisés aujourd'hui sont établis à dire d'expert, à partir de la littérature et de la pratique. Ils sont destinés à être affinés au fil du temps grâce aux cas réels dont le diagnostic a été confirmé au laboratoire, recueillis auprès d'un établissement clinique partenaire.</p>
+
+    <figure>
+      <img src="assets/img/fig4-amelioration.png" alt="Amélioration progressive en trois étapes : scores experts, accumulation de cas confirmés, ajustement des scores, avec une boucle de rétroaction continue.">
+      <figcaption>Figure 4 — Amélioration progressive : les cas confirmés permettent d'affiner les scores initiaux.</figcaption>
+    </figure>
+
+    <p>Cet ajustement ne concernera que les affections fréquentes, seules à pouvoir réunir assez de cas pour être fiables. Les maladies rares et celles à déclaration obligatoire resteront en permanence gouvernées par les règles établies à dire d'expert, précisément parce qu'elles ne seront jamais assez représentées et qu'aucune erreur n'y est acceptable.</p>
+  </div>
+</section>
+
+<!-- ================= 7 ================= -->
+<section id="limites">
+  <div class="wrap">
+    <p class="num">07</p>
+    <h2>Limites assumées</h2>
+    <div class="limites">
+      <div>
+        <h4>Un outil d'aide, pas un diagnostic</h4>
+        <p>L'outil hiérarchise des hypothèses et oriente les prélèvements, mais il ne conclut pas. La décision et la responsabilité restent entières et exclusives au vétérinaire.</p>
+      </div>
+      <div>
+        <h4>Des informations déclaratives</h4>
+        <p>L'odeur d'un jetage ou la nature d'un râle relèvent d'une appréciation personnelle. Le système n'affiche donc jamais de certitude absolue et n'élimine une hypothèse que sur des critères objectifs.</p>
+      </div>
+      <div>
+        <h4>Les co-infections</h4>
+        <p>Le classement ne signale pas encore explicitement la coexistence de deux affections : la lecture des deux ou trois premières hypothèses, et non de la seule première, fait partie des consignes d'utilisation.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PIED ================= -->
+<footer>
+  <div class="wrap">
+    <div>
+      <strong>Plateforme intelligente d'aide au diagnostic vétérinaire aviaire</strong>
+      Projet réalisé par EL ORCH Youssef — Institut Agronomique et Vétérinaire Hassan II
+    </div>
+    <div>
+      <strong>Ressources</strong>
+      <a href="outil.html">Outil de diagnostic</a> · <a href="assets/doc/fiche-projet.pdf">Fiche de projet (PDF)</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('burger').addEventListener('click', function () {
+    document.getElementById('menu').classList.toggle('ouvert');
+  });
+  document.querySelectorAll('#menu a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      document.getElementById('menu').classList.remove('ouvert');
+    });
+  });
+</script>
+</body>
+</html>
