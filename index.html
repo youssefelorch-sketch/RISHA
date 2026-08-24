@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arbre décisionnel — Diagnostic différentiel des affections respiratoires aviaires</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --ardoise:#14262B;
+  --ardoise-2:#1E3A40;
+  --papier:#F2F4F1;
+  --carte:#FFFFFF;
+  --sang:#9E2B25;
+  --ambre:#A9761A;
+  --gris:#5C6B6E;
+  --trait:#D3D9D4;
+  --serif:'Spectral',Georgia,serif;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--papier);color:var(--ardoise);
+  font-family:var(--sans);font-size:16px;line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px 96px;}
+
+/* ---------- Bandeau de titre ---------- */
+.bandeau{background:var(--ardoise);color:#EDF1EE;padding:56px 0 44px;margin-bottom:44px;}
+.bandeau .wrap{padding-bottom:0}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:#8FB0AE;margin:0 0 18px}
+.num-chapitre{font-family:var(--mono);font-size:clamp(3.4rem,11vw,6.6rem);line-height:.86;font-weight:600;color:var(--ambre);margin:0}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(1.7rem,4.4vw,2.9rem);line-height:1.14;margin:.25em 0 .35em;max-width:22ch}
+.sous-titre{font-family:var(--serif);font-style:italic;font-size:1.05rem;color:#A9C2BF;margin:0;max-width:62ch}
+.meta{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,255,255,.16);font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;color:#8FB0AE;display:flex;gap:26px;flex-wrap:wrap}
+
+/* ---------- Mise en page ---------- */
+.grille{display:grid;grid-template-columns:210px minmax(0,1fr);gap:52px;align-items:start}
+@media(max-width:900px){.grille{grid-template-columns:1fr;gap:24px}}
+
+nav.sommaire{position:sticky;top:22px;font-size:.83rem;border-left:2px solid var(--trait);padding-left:16px}
+nav.sommaire p{font-family:var(--mono);font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gris);margin:0 0 12px}
+nav.sommaire a{display:block;color:var(--ardoise);text-decoration:none;padding:5px 0;border-bottom:1px solid transparent;line-height:1.35}
+nav.sommaire a span{font-family:var(--mono);color:var(--ambre);margin-right:8px;font-size:.78em}
+nav.sommaire a:hover{color:var(--sang)}
+@media(max-width:900px){nav.sommaire{position:static;border-left:none;border-top:2px solid var(--trait);padding:16px 0 0}}
+
+section{margin-bottom:64px;scroll-margin-top:20px}
+h2{font-family:var(--serif);font-size:1.72rem;font-weight:600;line-height:1.2;margin:0 0 6px;padding-bottom:12px;border-bottom:2px solid var(--ardoise)}
+h2 .rep{font-family:var(--mono);font-size:.82rem;font-weight:500;color:var(--ambre);display:block;letter-spacing:.14em;margin-bottom:8px}
+h3{font-family:var(--sans);font-size:1.05rem;font-weight:600;letter-spacing:-.01em;margin:32px 0 8px;color:var(--ardoise-2)}
+h4{font-family:var(--mono);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gris);margin:22px 0 6px;font-weight:600}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 16px;padding-left:20px}
+li{margin-bottom:6px}
+strong{font-weight:600}
+em{font-style:italic}
+.lat{font-style:italic}
+a{color:var(--sang)}
+
+/* ---------- Signature : constantes ---------- */
+.val{font-family:var(--mono);font-size:.94em;font-weight:500;color:var(--ardoise);background:linear-gradient(to top,rgba(169,118,26,.28) 0 .28em,transparent .28em);padding:0 1px;white-space:nowrap}
+
+.constantes{background:var(--carte);border:1px solid var(--trait);border-top:3px solid var(--ambre);padding:18px 20px 8px;margin:24px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px 22px}
+.constantes .c-titre{grid-column:1/-1;font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gris);margin-bottom:2px}
+.constantes dl{margin:0}
+.constantes dt{font-size:.78rem;color:var(--gris);line-height:1.3}
+.constantes dd{margin:2px 0 12px;font-family:var(--mono);font-size:1.02rem;font-weight:500;color:var(--ardoise)}
+
+/* ---------- Encadrés ---------- */
+.encart{border-left:3px solid var(--ardoise-2);background:var(--carte);padding:16px 20px;margin:22px 0}
+.encart.clinique{border-left-color:var(--sang)}
+.encart.clinique .e-titre{color:var(--sang)}
+.e-titre{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ardoise-2);margin:0 0 8px;font-weight:600}
+.encart p:last-child,.encart ul:last-child{margin-bottom:0}
+
+/* ---------- Tableaux ---------- */
+.tab-wrap{overflow-x:auto;margin:22px 0;border:1px solid var(--trait);background:var(--carte)}
+table{border-collapse:collapse;width:100%;font-size:.86rem;min-width:520px}
+caption{caption-side:top;text-align:left;font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gris);padding:12px 14px 10px;border-bottom:1px solid var(--trait);background:#FAFBFA}
+th{background:var(--ardoise);color:#EDF1EE;font-weight:500;text-align:left;padding:9px 12px;font-size:.78rem;letter-spacing:.02em;vertical-align:bottom}
+td{padding:9px 12px;border-bottom:1px solid var(--trait);vertical-align:top}
+tbody tr:nth-child(even){background:#F8F9F8}
+td.n{font-family:var(--mono);font-size:.86rem;white-space:nowrap}
+th.sub,td.sub{background:var(--ardoise-2);color:#EDF1EE;font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase}
+
+/* ---------- Références ---------- */
+.refs{border-top:2px solid var(--ardoise);padding-top:20px;margin-top:34px}
+.refs h3{margin-top:0;font-family:var(--serif);font-size:1.15rem}
+.refs ol{list-style:none;padding-left:0;counter-reset:r;font-size:.84rem;line-height:1.5}
+.refs li{counter-increment:r;padding-left:38px;position:relative;margin-bottom:10px;color:#31464A}
+.refs li::before{content:counter(r,decimal-leading-zero);position:absolute;left:0;top:1px;font-family:var(--mono);font-size:.74rem;color:var(--ambre)}
+.pied{margin-top:60px;padding-top:18px;border-top:1px solid var(--trait);font-family:var(--mono);font-size:.72rem;color:var(--gris);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+
+@media print{
+  body{background:#fff;font-size:10.5pt}
+  .bandeau{background:#fff;color:#000;border-bottom:3px solid #000;padding:0 0 18px}
+  .num-chapitre{color:#000;font-size:2.4rem}
+  .sous-titre,.meta,.eyebrow{color:#333}
+  nav.sommaire{display:none}
+  .grille{grid-template-columns:1fr}
+  section{page-break-inside:auto}
+  h2{page-break-after:avoid}
+  table{page-break-inside:auto}
+  tr{page-break-inside:avoid}
+}
+
+/* ===== Outil décisionnel ===== */
+.appgrille{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:34px;align-items:start}
+@media(max-width:940px){.appgrille{grid-template-columns:1fr}}
+
+.progbar{height:5px;background:var(--trait);margin:0 0 26px;position:relative;overflow:hidden}
+.progbar i{display:block;height:100%;background:var(--ambre);width:0;transition:width .3s}
+.progtxt{font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gris);margin:0 0 8px;display:flex;justify-content:space-between}
+
+.qcard{background:var(--carte);border:1px solid var(--trait);border-top:3px solid var(--ardoise);padding:24px 26px}
+.qnum{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;color:var(--ambre);margin:0 0 10px}
+.qtxt{font-family:var(--serif);font-size:1.32rem;font-weight:600;line-height:1.28;margin:0 0 6px}
+.qhelp{font-size:.85rem;color:var(--gris);margin:0 0 18px;line-height:1.5}
+.qmulti{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sang);margin-bottom:12px}
+
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--trait);background:#FCFDFC;padding:12px 14px;cursor:pointer;transition:border-color .15s,background .15s;font-size:.92rem;line-height:1.45;text-align:left;font-family:inherit;color:inherit;width:100%}
+.opt:hover{border-color:var(--ardoise-2);background:#F5F8F6}
+.opt.sel{border-color:var(--ardoise);background:#EDF3F0;box-shadow:inset 3px 0 0 var(--ambre)}
+.opt .k{font-family:var(--mono);font-size:.7rem;color:var(--ambre);flex-shrink:0;padding-top:2px;min-width:18px}
+.opt .d{display:block;font-size:.8rem;color:var(--gris);margin-top:3px}
+
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:22px;flex-wrap:wrap}
+button.btn{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;padding:11px 20px;border:1px solid var(--ardoise);background:var(--ardoise);color:#EDF1EE;cursor:pointer;transition:opacity .15s}
+button.btn:hover{opacity:.85}
+button.btn.sec{background:transparent;color:var(--ardoise)}
+button.btn:disabled{opacity:.3;cursor:not-allowed}
+
+/* Panneau candidats */
+.panel{position:sticky;top:20px;background:var(--carte);border:1px solid var(--trait);padding:18px 18px 14px}
+.panel h3{margin:0 0 4px;font-family:var(--mono);font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gris);font-weight:600}
+.panel .sub{font-size:.74rem;color:var(--gris);margin:0 0 14px;line-height:1.4}
+.cand{margin-bottom:9px}
+.cand .l{display:flex;justify-content:space-between;gap:8px;font-size:.8rem;margin-bottom:3px;align-items:baseline}
+.cand .l b{font-weight:600}
+.cand .l span{font-family:var(--mono);font-size:.68rem;color:var(--gris)}
+.cand .bar{height:6px;background:#E8EBE8;overflow:hidden}
+.cand .bar i{display:block;height:100%;background:var(--ardoise-2);width:0;transition:width .35s}
+.cand.top1 .bar i{background:var(--sang)}
+.cand.top1 .l b{color:var(--sang)}
+.exclus{margin-top:14px;padding-top:12px;border-top:1px solid var(--trait)}
+.exclus p{font-family:var(--mono);font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gris);margin:0 0 6px}
+.exclus span{display:inline-block;font-size:.74rem;color:#9AA5A3;text-decoration:line-through;margin:0 8px 3px 0}
+
+/* Alerte urgence */
+.urg{background:var(--sang);color:#fff;padding:16px 20px;margin:0 0 22px;display:none}
+.urg.on{display:block}
+.urg p{margin:0 0 6px}
+.urg .t{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+.urg a{color:#fff}
+
+/* Rapport final */
+.rapport{display:none}
+.rapport.on{display:block}
+.res{background:var(--carte);border:1px solid var(--trait);border-left:3px solid var(--ardoise-2);padding:18px 22px;margin-bottom:16px}
+.res.r1{border-left-color:var(--sang)}
+.res .rang{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gris);margin:0 0 4px}
+.res h4{font-family:var(--serif);font-size:1.2rem;margin:0 0 4px;text-transform:none;letter-spacing:0;color:var(--ardoise);font-weight:600}
+.res .pc{font-family:var(--mono);font-size:.8rem;color:var(--ambre);margin-bottom:10px}
+.res dl{margin:0;display:grid;grid-template-columns:132px minmax(0,1fr);gap:0}
+.res dt{font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gris);padding:8px 10px 8px 0;border-bottom:1px solid var(--trait);font-weight:600}
+.res dd{margin:0;padding:8px 0;border-bottom:1px solid var(--trait);font-size:.86rem;line-height:1.5}
+.res dl>dt:last-of-type,.res dl>dd:last-of-type{border-bottom:none}
+@media(max-width:640px){.res dl{grid-template-columns:1fr}.res dt{border-bottom:none;padding-bottom:1px}.res dd{padding-top:1px}}
+.recap{background:var(--carte);border:1px solid var(--trait);padding:16px 20px;margin:20px 0;font-size:.84rem}
+.recap li{margin-bottom:4px}
+.recap b{font-weight:600}
+
+@media print{
+  .qcard,.panel,.nav,.progbar,.progtxt,nav.sommaire{display:none!important}
+  .rapport{display:block!important}
+  .appgrille{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<header class="bandeau">
+  <div class="wrap">
+    <p class="eyebrow">Guide pratique de médecine aviaire — Outil de terrain</p>
+    <p class="num-chapitre">AD1</p>
+    <h1>Arbre décisionnel — Affections respiratoires</h1>
+    <p class="sous-titre">Questionnaire guidé à destination de l'éleveur et du vétérinaire de terrain. Chaque réponse écarte ou renforce des hypothèses ; la liste des maladies candidates se met à jour en temps réel.</p>
+    <div class="meta">
+      <span>Point d'entrée — « le lot présente des signes respiratoires »</span>
+      <span>17 hypothèses différentielles · 14 questions</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="encart" style="margin-top:0">
+  <p class="e-titre">Mode d'emploi</p>
+  <p>Répondez aux questions dans l'ordre. Le panneau de droite affiche en permanence les hypothèses restantes, classées par vraisemblance, et celles qui ont été écartées. Une réponse « je ne sais pas » est toujours possible et n'écarte rien. À la fin, l'outil produit une synthèse imprimable avec les <strong>prélèvements à réaliser</strong> et les <strong>mesures immédiates</strong>.</p>
+  <p style="margin-bottom:0"><strong>Cet outil oriente, il ne diagnostique pas.</strong> La confirmation repose sur l'autopsie de 5 à 10 sujets et sur le laboratoire. Certaines maladies de la liste sont à déclaration obligatoire : en cas d'alerte rouge, arrêtez le questionnaire et contactez immédiatement les services vétérinaires.</p>
+</div>
+
+<div class="urg" id="urg">
+  <p class="t">⚠ Alerte — suspicion de maladie à déclaration obligatoire</p>
+  <p id="urgtxt"></p>
+  <p style="margin-bottom:0"><strong>Conduite immédiate :</strong> suspendre tout mouvement d'animaux, de personnes, de matériel et d'effluents ; ne pas pratiquer d'autopsie sur le site ; notifier sans délai les services vétérinaires officiels ; les prélèvements sont réalisés sous leur supervision.</p>
+</div>
+
+<div class="appgrille">
+
+  <main>
+    <p class="progtxt"><span id="pt">Question 1 / 14</span><span id="pr">0 %</span></p>
+    <div class="progbar"><i id="pb"></i></div>
+
+    <div id="qzone"></div>
+
+    <div class="rapport" id="rapport"></div>
+  </main>
+
+  <aside>
+    <div class="panel">
+      <h3>Hypothèses en lice</h3>
+      <p class="sub">Vraisemblance relative recalculée à chaque réponse. La barre rouge indique l'hypothèse de tête.</p>
+      <div id="cands"></div>
+      <div class="exclus" id="exzone" style="display:none">
+        <p>Écartées</p>
+        <div id="exlist"></div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+</div>
+
+<script>
+/* ============ BASE DE CONNAISSANCES ============ */
+const D = {
+  IBV:  {n:"Bronchite infectieuse (IBV)", p:3.0,
+        test:"RT-PCR sur trachée / écouvillon choanal + <b>séquençage du gène S1</b> (génotypage : Mass, 4-91, QX, Var2) ; ELISA ou IHA sur 20 sérums appariés ; rein si forme néphropathogène.",
+        act:"Pas de traitement spécifique. Antibiothérapie ciblée sur la surinfection colibacillaire uniquement. Vérifier l'adéquation du vaccin au génotype circulant : c'est la seule mesure de fond. Réchauffer et alléger l'ambiance."},
+  H9N2: {n:"Influenza faiblement pathogène H9N2", p:3.0,
+        test:"RT-PCR gène M puis sous-typage H9 (écouvillons trachéaux + cloacaux) ; <b>IHA</b> pour le suivi vaccinal. Rechercher systématiquement les co-infections IBV, <i>E. coli</i>, ORT.",
+        act:"Traiter les surinfections bactériennes sur antibiogramme. Renforcer la biosécurité (avifaune, marchés de vivants). Réévaluer le programme vaccinal H9N2 inactivé et la date d'administration."},
+  IAHP: {n:"Influenza aviaire hautement pathogène (H5/H7)", p:0.25, mdo:true,
+        test:"<b>Sous supervision officielle uniquement.</b> RT-PCR gène M puis H5/H7 + séquençage du site de clivage de l'HA ; IPIV ; isolement sur œufs embryonnés.",
+        act:"NOTIFICATION IMMÉDIATE. Suspension de tous les mouvements. Pas d'autopsie sur site. Zonage et abattage sanitaire selon la réglementation."},
+  NDV:  {n:"Maladie de Newcastle (forme vélogène)", p:0.8, mdo:true,
+        test:"<b>IHA — test sérologique de référence</b> (titre protecteur ≥ 2⁴–2⁵, CV faible) ; RT-PCR du gène F avec analyse du site de clivage ; ICPI pour le pathotypage.",
+        act:"NOTIFICATION. Pas de traitement. Revoir le programme vaccinal : association vivant + inactivé, rappels réguliers, contrôle de la couverture (colorant, sérologie post-vaccinale)."},
+  PV:   {n:"Réaction post-vaccinale (vivant respiratoire)", p:2.0,
+        test:"Aucun en première intention. En cas de doute : RT-PCR avec différenciation souche vaccinale / souche de terrain ; vérifier la date, la voie et la taille des gouttelettes de nébulisation.",
+        act:"Aucun traitement. Vérifier le calibrage du nébulisateur (gouttelettes trop fines = réaction profonde), la température de l'eau, l'ambiance au moment de la vaccination. Espacer les vivants respiratoires d'au moins 10 à 14 jours."},
+  ILT:  {n:"Laryngotrachéite infectieuse (ILT)", p:0.8,
+        test:"PCR sur exsudat trachéal ; <b>histologie : corps d'inclusion intranucléaires éosinophiles + syncytiums</b> dans l'épithélium trachéal (quasi pathognomonique) ; isolement sur membrane chorio-allantoïdienne.",
+        act:"Isolement du bâtiment, arrêt des mouvements. Vaccination en urgence possible en zone endémique (attention à la réversion des vaccins CEO). Préférer les vectorisés HVT-LT/FP-LT au couvoir en prévention. Vide sanitaire prolongé."},
+  MG:   {n:"Mycoplasmose à <i>M. gallisepticum</i> (CRD)", p:2.0,
+        test:"<b>RAL (agglutination rapide sur lame) en dépistage</b> puis confirmation par ELISA et IHA ; <b>PCR</b> sur écouvillon choanal ou trachéal ; culture sur milieu spécifique.",
+        act:"Antibiothérapie sur antibiogramme : macrolides (tylosine, tilmicosine), pleuromutilines (tiamuline), tétracyclines. Corriger impérativement l'ambiance. À l'étage reproducteur : dépistage-abattage, jamais de vaccination sous programme d'éradication."},
+  MS:   {n:"Mycoplasmose à <i>M. synoviae</i>", p:0.9,
+        test:"RAL puis ELISA ; PCR et typage <i>vlhA</i> ; examiner les articulations tibio-tarsiennes et la bourse sternale ; contrôler l'apex des coquilles (EAA).",
+        act:"Idem MG. Surveiller les boiteries et la qualité de coquille. Statut des reproducteurs à vérifier."},
+  COR:  {n:"Coryza infectieux (<i>A. paragallinarum</i>)", p:1.4,
+        test:"Culture sur gélose sang avec <b>satellitisme</b> autour d'une strie de <i>Staphylococcus</i> (exigence en facteur V) ; PCR temps réel ; sérotypage de Page (A, B, C).",
+        act:"Antibiothérapie (sulfamides potentialisés, amoxicilline, tétracyclines) — rechute fréquente à l'arrêt. Vaccination inactivée adaptée aux sérovars locaux, deux injections avant la ponte. Éliminer les élevages multi-âges."},
+  AMPV: {n:"Métapneumovirose (TRT / grosse tête)", p:1.2,
+        test:"<b>RT-PCR sur écouvillon choanal PRÉCOCE</b> — fenêtre virale de 3 à 7 jours seulement, au-delà le test est négatif ; ELISA sur sérums appariés à 3 semaines d'intervalle.",
+        act:"Traiter les surinfections (<i>E. coli</i>, ORT). Corriger l'ammoniac et la densité, qui conditionnent la gravité. Vaccination vivante à J1 et 3–4 sem., inactivé en pré-ponte."},
+  ORT:  {n:"Ornithobactériose (ORT)", p:1.0,
+        test:"Culture en atmosphère enrichie en CO₂ (croissance lente) + <b>antibiogramme obligatoire</b> (résistances fréquentes) ; PCR temps réel ; ELISA.",
+        act:"Antibiothérapie sur antibiogramme, précoce. Vaccin inactivé en prévention. Corriger l'ambiance et rechercher le virus déclenchant (aMPV, IBV, H9N2)."},
+  COLI: {n:"Colibacillose respiratoire (APEC)", p:3.0,
+        test:"Culture pure sur <b>organe fermé</b> (foie, cœur, moelle, sac aérien après cautérisation) + <b>antibiogramme</b> + sérotypage. Ne jamais cultiver un organe déjà ouvert.",
+        act:"<b>Toujours secondaire</b> : identifier et corriger la cause primaire (NH₃, IBV, MG, aMPV, immunodépression) avant tout. Antibiothérapie sur antibiogramme, temps d'attente respectés. Vaccin vivant délété aroA ou autovaccin en filière longue."},
+  ASP:  {n:"Aspergillose", p:0.7,
+        test:"Examen direct à l'état frais des nodules (<b>filaments septés à ramification à 45°</b>) ; culture sur Sabouraud ; histologie PAS/Grocott ; analyse mycologique de la litière et de l'aliment.",
+        act:"Aucun traitement rentable. Éliminer la source : litière ou aliment moisis, enquête au couvoir (éclosoirs, humidificateurs, ventilation). Énilconazole en nébulisation pour abaisser la pression sporale des locaux. Non contagieuse : ne pas isoler."},
+  VAR:  {n:"Variole aviaire (forme diphtérique)", p:0.5,
+        test:"<b>Histologie : corps d'inclusion intracytoplasmiques éosinophiles (corps de Bollinger)</b> ; PCR ; isolement sur membrane chorio-allantoïdienne (pocks).",
+        act:"Antiseptiques locaux, antibiothérapie des surinfections, vitamine A. Vaccination par trans-fixion alaire avec <b>lecture obligatoire du « take » à J7–J10</b> sur 50 sujets. Lutte anti-moustiques."},
+  CHL:  {n:"Chlamydiose aviaire (zoonose)", p:0.3,
+        test:"PCR sur rate ou écouvillons cloacaux et pharyngés ; coloration de Stamp / Gimenez ; sérologie. <b>Manipulation en laboratoire de niveau de sécurité adapté.</b>",
+        act:"Doxycycline sur plusieurs semaines. <b>Protection du personnel obligatoire (FFP2/FFP3, gants)</b> et information du médecin du travail — risque de pneumopathie humaine sévère. Déclaration selon la réglementation nationale."},
+  PAST: {n:"Choléra aviaire (<i>P. multocida</i>)", p:0.7,
+        test:"<b>Frottis de foie ou de moelle au bleu de méthylène : coccobacilles BIPOLAIRES</b> ; culture + antibiogramme ; PCR et typage.",
+        act:"Antibiothérapie précoce (bêta-lactamines, tétracyclines, sulfamides) sur antibiogramme — récidive fréquente à l'arrêt. Dératisation, biosécurité, vaccination (inactivé, ou vivant atténué chez la dinde en zone endémique)."},
+  AMB:  {n:"Ammoniac / défaut d'ambiance", p:2.5,
+        test:"<b>Mesure du NH₃ à 20–30 cm du sol</b> (tube colorimétrique ou cellule électrochimique) et du CO₂ ; test fumigène de la trajectoire d'air ; mesure de la dépression ; humidité de litière.",
+        act:"Corriger la ventilation minimale et la dépression (vitesse d'entrée d'air ≥ 3,5 m/s), assécher ou renouveler la litière, réduire la densité, amender la litière (sulfate d'aluminium). Aucune valeur d'un traitement tant que le NH₃ dépasse 20 ppm."}
+};
+const IDS = Object.keys(D);
+const F1 = ()=>{let o={};IDS.forEach(k=>o[k]=1);return o;};
+function mk(obj){const b=F1();for(const k in obj)b[k]=obj[k];return b;}
+
+/* ============ QUESTIONS ============ */
+const Q = [
+{t:"Quelle est la production concernée ?",h:"L'espèce et la filière écartent à elles seules plusieurs hypothèses : l'IBV et l'ILT n'affectent pas la dinde, l'ORT est avant tout une maladie de dinde et de poulet lourd.",
+ o:[
+ {l:"Poulet de chair",e:{ILT:0.4,COR:0.4,MS:0.3,VAR:0.2,CHL:0.3,PAST:0.3,ORT:0.7,IAHP:0.8}},
+ {l:"Poulette ou poule pondeuse",e:{ILT:2,COR:2,VAR:1.5,MS:1.5,PAST:1.5,ORT:0.4,CHL:1.2}},
+ {l:"Reproducteurs (chair ou ponte)",e:{ILT:1.8,COR:1.8,VAR:1.5,MS:2,MG:1.5,PAST:1.3,ORT:0.4}},
+ {l:"Dinde",e:{IBV:0.03,ILT:0.03,COR:0.1,ORT:4,AMPV:3.5,PAST:2.5,CHL:2,IAHP:2,MS:0.8,VAR:0.6}},
+ {l:"Je ne sais pas",e:{}}
+]},
+{t:"Quel est l'âge du lot ?",h:"L'âge est le deuxième filtre le plus discriminant. Un signe respiratoire avant 2 semaines n'est presque jamais une ILT, un coryza ou une variole.",
+ o:[
+ {l:"Moins de 2 semaines",e:{ILT:0.08,COR:0.15,VAR:0.08,MS:0.3,PAST:0.05,ASP:2.5,COLI:1.5,IBV:1.5,PV:1.5,ORT:0.3,CHL:0.5}},
+ {l:"2 à 6 semaines",e:{IBV:1.6,H9N2:1.6,COLI:1.6,AMB:1.3,ILT:0.4,VAR:0.3,PAST:0.2,COR:0.5,ORT:1.2}},
+ {l:"6 à 18 semaines (croissance, poulette)",e:{ILT:1.5,COR:1.5,VAR:1.5,ORT:1.5,MG:1.5,PAST:1,ASP:0.8}},
+ {l:"Plus de 18 semaines (adulte, en ponte)",e:{ILT:2,COR:2,MG:1.5,MS:1.5,PAST:2,VAR:1.5,CHL:1.5,ASP:0.6,COLI:1.2,IBV:1.2}},
+ {l:"Je ne sais pas",e:{}}
+]},
+{t:"Quelle est la mortalité journalière actuelle ?",h:"Rapportée à l'effectif présent. C'est le critère qui sépare les urgences réglementaires des affections chroniques.",
+ o:[
+ {l:"Normale (moins de 0,5 % par jour)",e:{IAHP:0.02,NDV:0.1,PAST:0.2,ILT:0.5,ORT:0.4}},
+ {l:"Légèrement élevée (0,5 à 2 % par jour)",e:{IAHP:0.08,NDV:0.5,PV:0.8}},
+ {l:"Élevée (2 à 5 % par jour)",e:{IAHP:0.6,NDV:2,ILT:2,COLI:1.5,ORT:2,PAST:2,AMB:0.5,PV:0.3,MS:0.4}},
+ {l:"Explosive (plus de 5 % par jour)",e:{IAHP:12,NDV:5,PAST:3,ILT:2,ORT:1.5,IBV:0.3,MG:0.1,COR:0.1,AMB:0.1,MS:0.05,VAR:0.05,PV:0.05,ASP:0.5,H9N2:0.6}},
+ {l:"Je ne sais pas",e:{}}
+]},
+{t:"Comment la maladie s'est-elle installée ?",h:"La cinétique d'apparition sépare les viroses aiguës hautement contagieuses des affections chroniques d'ambiance.",
+ o:[
+ {l:"Brutalement, tout le lot atteint en moins de 48 h",e:{IAHP:3,NDV:2,COR:2.5,PAST:3,IBV:1.5,ORT:1.5,AMB:0.5,MG:0.2,MS:0.2,ASP:0.5,VAR:0.05}},
+ {l:"Progressivement sur 3 à 7 jours",e:{IBV:1.5,H9N2:1.5,AMPV:1.5,COLI:1.5,ILT:1.5,PV:1.3}},
+ {l:"Lentement, sur plusieurs semaines, de façon récidivante",e:{MG:3,MS:2,VAR:3,ASP:2,AMB:2.5,CHL:2,IAHP:0.05,NDV:0.1,COR:0.3,PV:0.2}},
+ {l:"Je ne sais pas",e:{}}
+]},
+{t:"Que voit-on sur la tête des animaux ?",h:"Le signe céphalique est le plus discriminant de toute la démarche respiratoire. Regardez plusieurs animaux malades avant de répondre.",
+ o:[
+ {l:"Rien d'anormal sur la tête",e:{COR:0.1,AMPV:0.2,VAR:0.08,IAHP:0.3,MG:0.7}},
+ {l:"Gonflement de la face et du pourtour de l'œil, avec écoulement du nez MALODORANT",e:{COR:9,AMPV:1.5,MG:1.5,IBV:0.5,H9N2:0.5,ASP:0.2,ILT:0.3}},
+ {l:"Gonflement diffus de toute la tête et des paupières, parfois torticolis",e:{AMPV:9,COR:2,COLI:1.5,MG:1,IBV:0.4,ASP:0.2}},
+ {l:"Crête et barbillons bleutés et gonflés, points rouges sur les pattes",e:{IAHP:12,NDV:3,PAST:3,IBV:0.2,MG:0.2,COR:0.3,AMB:0.1,PV:0.1,ASP:0.2}},
+ {l:"Nodules ou croûtes jaunâtres sur la crête, les barbillons, les paupières",e:{VAR:25,IBV:0.3,MG:0.3,COR:0.5,AMPV:0.3,ASP:0.3}},
+ {l:"Gonflement sous l'œil (sinus), d'un ou des deux côtés",e:{MG:5,AMPV:2,COR:2,ORT:1.5,IBV:0.5,ASP:0.3}},
+ {l:"Je ne sais pas",e:{}}
+]},
+{t:"Quel type de gêne respiratoire entendez-vous ou observez-vous ?",h:"Écoutez le bâtiment dans l'obscurité, animaux au calme : c'est le seul moment où les râles sont audibles de façon fiable.",
+ o:[
+ {l:"Éternuements et râles humides (« gargouillis ») dans la trachée",e:{IBV:2,MG:2,H9N2:1.5,AMPV:1.5,PV:2,ASP:0.15,VAR:0.5}},
+ {l:"Toux avec cou tendu, l'animal projette du mucus ou du sang",e:{ILT:18,NDV:2,IBV:0.4,MG:0.4,COR:0.3,AMB:0.2,PV:0.2,ASP:0.5}},
+ {l:"Bec ouvert, respiration difficile, MAIS sans écoulement ni râle humide",e:{ASP:7,ILT:1.5,IBV:0.4,MG:0.4,COR:0.3,AMB:0.6,PV:0.3}},
+ {l:"Ronflements discrets, surtout la nuit, sur une partie du lot",e:{MG:2.5,AMB:1.8,IBV:1.2,MS:1.5,IAHP:0.1,NDV:0.2}},
+ {l:"Dyspnée sévère avec prostration et animaux immobiles",e:{NDV:2,IAHP:2,ORT:2.5,COLI:2,PAST:2,PV:0.2}},
+ {l:"Je ne sais pas",e:{}}
+]},
+{t:"Y a-t-il un écoulement nasal ou oculaire ?",h:"Distinguer l'aspect et l'odeur. L'odeur fétide est quasi spécifique du coryza.",
+ o:[
+ {l:"Aucun écoulement",e:{COR:0.15,MG:0.6,AMPV:0.5,ASP:2,IBV:0.7}},
+ {l:"Écoulement clair, liquide (séreux)",e:{IBV:2,AMPV:1.6,H9N2:1.5,PV:1.5}},
+ {l:"Écoulement épais, purulent et malodorant",e:{COR:6,MG:1.5,ORT:1.3,IBV:0.4,ASP:0.2}},
+ {l:"Écoulement mousseux au coin de l'œil, conjonctivite",e:{MG:3.5,AMPV:2,MS:1.5,AMB:1.5,IBV:1.2}},
+ {l:"Je ne sais pas",e:{}}
+]},
+{t:"La ponte est-elle affectée, et comment ?",h:"Réservé aux lots en production. La nature de l'anomalie d'œuf oriente autant que les signes respiratoires eux-mêmes.",
+ o:[
+ {l:"Lot non concerné (animaux non en ponte)",e:{}},
+ {l:"Chute de ponte avec œufs DÉFORMÉS et blanc liquide (aqueux)",e:{IBV:7,NDV:1.5,H9N2:1.3,AMB:0.3,ASP:0.2}},
+ {l:"Chute avec coquilles PÂLES, molles ou sans coquille, sans autre signe",e:{IBV:0.6,MG:0.5,COR:0.4,eds:1}},
+ {l:"Amincissement du bout pointu de l'œuf (apex), fêlures apicales",e:{MS:6,IBV:1.2}},
+ {l:"Chute brutale allant jusqu'à l'arrêt total de la ponte",e:{NDV:3,IAHP:3,IBV:1.5}},
+ {l:"Chute modérée sans anomalie visible des œufs",e:{AMPV:2,PAST:1.8,MG:1.5,COR:1.5}},
+ {l:"Ponte normale",e:{IBV:0.7,NDV:0.5,IAHP:0.4,MS:0.5}},
+ {l:"Je ne sais pas",e:{}}
+]},
+{t:"Y a-t-il des signes NON respiratoires associés ?",h:"Plusieurs réponses possibles. Ces signes font souvent basculer le diagnostic à eux seuls.",m:true,
+ o:[
+ {l:"Diarrhée verdâtre abondante",e:{NDV:4,IAHP:2.5,PAST:1.5}},
+ {l:"Signes nerveux : torticolis, tremblements, paralysie",e:{NDV:6,AMPV:2.5,IAHP:2.5,IBV:0.4,MG:0.3,COR:0.2}},
+ {l:"Fientes très blanches, animaux déshydratés, atteinte des reins",e:{IBV:4,H9N2:1.5,COR:0.4}},
+ {l:"Boiteries, articulations gonflées",e:{MS:5,COLI:1.5,PAST:1.5,ORT:1.3}},
+ {l:"Baisse de consommation d'eau et d'aliment marquée",e:{IBV:1.4,H9N2:1.4,NDV:1.5,ORT:1.4,COR:1.4}},
+ {l:"Aucun signe associé",e:{NDV:0.3,IAHP:0.3}}
+]},
+{t:"Quel est l'état de l'ambiance du bâtiment ?",h:"À évaluer en entrant dans le bâtiment sans masque quelques secondes, et si possible avec un tube colorimétrique à 20–30 cm du sol.",
+ o:[
+ {l:"Odeur d'ammoniac nette dès l'entrée, picotement des yeux",e:{AMB:7,COLI:2,MG:1.5,AMPV:1.4,ORT:1.4}},
+ {l:"Litière humide, collante, ventilation manifestement insuffisante",e:{AMB:3.5,COLI:2,ASP:1.5,MG:1.3}},
+ {l:"Litière ou aliment visiblement moisis, poussière importante",e:{ASP:6,AMB:1.5}},
+ {l:"Ambiance correcte, litière sèche, pas d'odeur",e:{AMB:0.05,COLI:0.7}},
+ {l:"Je ne sais pas",e:{}}
+]},
+{t:"Quel est le statut vaccinal du lot ?",h:"Plusieurs réponses possibles. Un vivant respiratoire administré il y a moins de 10 jours doit toujours faire évoquer une réaction post-vaccinale avant une maladie.",m:true,
+ o:[
+ {l:"Vaccin vivant bronchite et/ou Newcastle administré il y a moins de 10 jours",e:{PV:5,IBV:0.7,NDV:0.5}},
+ {l:"Correctement vacciné contre la bronchite infectieuse",e:{IBV:0.5}},
+ {l:"Correctement vacciné contre la maladie de Newcastle (vivant + inactivé)",e:{NDV:0.25}},
+ {l:"Vacciné H9N2 (inactivé)",e:{H9N2:0.5}},
+ {l:"NON vacciné contre la bronchite infectieuse",e:{IBV:2.5}},
+ {l:"NON vacciné contre la maladie de Newcastle",e:{NDV:3}},
+ {l:"Troupeau certifié indemne de mycoplasmes",e:{MG:0.15,MS:0.2}},
+ {l:"Statut vaccinal inconnu",e:{}}
+]},
+{t:"Un traitement antibiotique a-t-il déjà été administré, et avec quel résultat ?",h:"La réponse au traitement est un test diagnostique en soi : les viroses et l'aspergillose n'y répondent pas.",
+ o:[
+ {l:"Oui, amélioration nette et durable",e:{MG:2,COR:3,COLI:2,ORT:2,PAST:2.5,IBV:0.3,NDV:0.2,ILT:0.3,ASP:0.15,H9N2:0.4,VAR:0.3,PV:0.3,AMB:0.5}},
+ {l:"Oui, amélioration partielle puis rechute à l'arrêt",e:{MG:2.5,COR:2,COLI:1.5,MS:1.5,AMB:1.5}},
+ {l:"Oui, aucune amélioration",e:{IBV:2,NDV:2,ILT:2,H9N2:2,AMPV:2,VAR:2,ASP:3,AMB:2,COR:0.4,PAST:0.4}},
+ {l:"Non, aucun traitement administré",e:{}}
+]},
+{t:"Une autopsie a-t-elle été réalisée ? Qu'a-t-on observé ?",h:"Plusieurs réponses possibles. C'est l'étape qui apporte le plus d'information — 5 à 10 sujets malades euthanasiés, jamais des cadavres anciens.",m:true,
+ o:[
+ {l:"Trachée rouge, remplie de sang ou bouchée par un dépôt caséeux",e:{ILT:18,NDV:3,IBV:0.3,MG:0.3}},
+ {l:"Mucus ou dépôt caséeux dans les bronches, poumons congestionnés",e:{IBV:2.5,H9N2:1.5,MG:1.5}},
+ {l:"Enveloppes du cœur et du foie recouvertes d'un voile blanc (fibrine), sacs aériens opaques",e:{COLI:8,CHL:2,MG:2.5,ORT:1.5}},
+ {l:"Plaques feutrées vert-gris sur les sacs aériens, nodules blancs dans les poumons",e:{ASP:25,COLI:0.4}},
+ {l:"Poumon ferme, « en moule », avec fausse membrane sur la plèvre",e:{ORT:12,PAST:2}},
+ {l:"Foie parsemé de très petits points blancs, points rouges sur le cœur",e:{PAST:15,NDV:1.5}},
+ {l:"Rate très grosse avec voile fibrineux",e:{CHL:8,PAST:2}},
+ {l:"Points rouges à la base des glandes de l'estomac, ulcères dans l'intestin",e:{NDV:15,IAHP:3}},
+ {l:"Pancréas nécrosé, hémorragies généralisées sur les membranes internes",e:{IAHP:15,NDV:2}},
+ {l:"Rien de particulier, ou lésions discrètes seulement",e:{AMB:2.5,PV:2.5,ASP:0.3,COLI:0.4,ORT:0.3,PAST:0.2}},
+ {l:"Pas d'autopsie réalisée",e:{}}
+]},
+{t:"Quel est le contexte de biosécurité et de conduite ?",h:"Plusieurs réponses possibles. Le contexte explique souvent l'origine de l'introduction.",m:true,
+ o:[
+ {l:"Élevage à plusieurs âges sur le même site",e:{MG:2.5,ILT:2,COR:3,MS:2,AMPV:1.5}},
+ {l:"Introduction récente d'animaux ou de poules de réforme",e:{COR:3,ILT:2,MG:2,MS:1.5}},
+ {l:"Proximité d'un plan d'eau, d'oiseaux sauvages ou d'un marché de volailles vivantes",e:{IAHP:4,H9N2:2.5,NDV:2}},
+ {l:"Élevages voisins touchés par le même problème",e:{IBV:1.5,H9N2:1.5,IAHP:1.5,NDV:1.5,AMB:0.4,ASP:0.3}},
+ {l:"Rongeurs nombreux sur le site",e:{PAST:3,COR:1.3}},
+ {l:"Site isolé, bande unique, biosécurité stricte",e:{IAHP:0.3,COR:0.4,ILT:0.4,AMB:1}},
+ {l:"Je ne sais pas",e:{}}
+]}
+];
+
+/* ============ MOTEUR ============ */
+let cur=0; const ans=Q.map(q=>q.m?[]:null);
+let edsFlag=false;
+
+function scores(){
+  let s={},ex={};
+  IDS.forEach(k=>{s[k]=D[k].p;ex[k]=false;});
+  edsFlag=false;
+  Q.forEach((q,i)=>{
+    const a=ans[i]; if(a===null||(Array.isArray(a)&&!a.length))return;
+    const list=Array.isArray(a)?a:[a];
+    list.forEach(oi=>{
+      const e=q.o[oi].e||{};
+      if(e.eds)edsFlag=true;
+      for(const k in e){ if(!D[k])continue; s[k]*=e[k]; if(e[k]<=0.1)ex[k]=true; }
+    });
+  });
+  return {s,ex};
+}
+
+/* Amortissement : le produit de vraisemblances est trop tranchant pour des
+   reponses declaratives d'eleveur. On applique un exposant < 1 afin de
+   conserver visibles les hypotheses secondaires. */
+const SOFT=0.5;
+function w(x){return Math.pow(Math.max(x,1e-9),SOFT);}
+
+function renderPanel(){
+  const {s,ex}=scores();
+  const live=IDS.filter(k=>!ex[k]).sort((a,b)=>s[b]-s[a]);
+  const dead=IDS.filter(k=>ex[k]).sort((a,b)=>s[b]-s[a]);
+  const tot=live.reduce((t,k)=>t+w(s[k]),0)||1;
+  const max=live.length?w(s[live[0]]):1;
+  document.getElementById('cands').innerHTML=live.slice(0,10).map((k,i)=>{
+    const pc=Math.round(w(s[k])/tot*100);
+    return `<div class="cand ${i===0?'top1':''}"><div class="l"><b>${D[k].n}</b><span>${pc}%</span></div><div class="bar"><i style="width:${Math.max(2,w(s[k])/max*100)}%"></i></div></div>`;
+  }).join('');
+  const ez=document.getElementById('exzone');
+  if(dead.length){ez.style.display='block';document.getElementById('exlist').innerHTML=dead.map(k=>`<span>${D[k].n.replace(/<[^>]+>/g,'')}</span>`).join('');}
+  else ez.style.display='none';
+  // alerte
+  const u=document.getElementById('urg');
+  const top=live[0];
+  if(live.length&&(top==='IAHP'||top==='NDV')&&w(s[top])/tot>0.22){
+    u.classList.add('on');
+    document.getElementById('urgtxt').innerHTML='Les réponses fournies orientent fortement vers : <b>'+D[top].n+'</b>. Cette maladie est à déclaration obligatoire.';
+  } else u.classList.remove('on');
+  return {s,ex,live};
+}
+
+function renderQ(){
+  if(cur>=Q.length){renderRapport();return;}
+  const q=Q[cur];
+  document.getElementById('pt').textContent='Question '+(cur+1)+' / '+Q.length;
+  document.getElementById('pr').textContent=Math.round(cur/Q.length*100)+' %';
+  document.getElementById('pb').style.width=(cur/Q.length*100)+'%';
+  const a=ans[cur];
+  const opts=q.o.map((o,i)=>{
+    const sel=q.m?(a||[]).includes(i):a===i;
+    return `<button class="opt ${sel?'sel':''}" data-i="${i}"><span class="k">${String.fromCharCode(65+i)}</span><span>${o.l}</span></button>`;
+  }).join('');
+  document.getElementById('qzone').innerHTML=
+   `<div class="qcard">
+      <p class="qnum">Question ${cur+1}</p>
+      <p class="qtxt">${q.t}</p>
+      <p class="qhelp">${q.h}</p>
+      ${q.m?'<p class="qmulti">▸ Plusieurs réponses possibles</p>':''}
+      <div class="opts">${opts}</div>
+      <div class="nav">
+        <button class="btn sec" id="prev" ${cur===0?'disabled':''}>← Précédent</button>
+        <button class="btn" id="next">${cur===Q.length-1?'Voir la synthèse →':'Suivant →'}</button>
+      </div>
+    </div>`;
+  document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i;
+    if(q.m){
+      let l=ans[cur]||[];
+      l = l.includes(i)? l.filter(x=>x!==i) : l.concat([i]);
+      ans[cur]=l;
+    } else { ans[cur]=i; }
+    renderQ(); renderPanel();
+    if(!q.m){ setTimeout(()=>{cur++;renderQ();renderPanel();},220); }
+  });
+  document.getElementById('prev').onclick=()=>{if(cur>0){cur--;renderQ();renderPanel();}};
+  document.getElementById('next').onclick=()=>{cur++;renderQ();renderPanel();};
+}
+
+function renderRapport(){
+  document.getElementById('qzone').innerHTML='';
+  document.getElementById('pt').textContent='Synthèse';
+  document.getElementById('pr').textContent='100 %';
+  document.getElementById('pb').style.width='100%';
+  const {s,live}=renderPanel();
+  const tot=live.reduce((t,k)=>t+w(s[k]),0)||1;
+  const top=live.slice(0,3);
+  let html='<h2><span class="rep">Synthèse</span>Hypothèses retenues et conduite à tenir</h2>';
+  if(edsFlag){
+    html+='<div class="encart clinique"><p class="e-titre">Piste hors champ respiratoire</p><p style="margin-bottom:0">Une chute de ponte avec coquilles pâles, molles ou absentes <b>sans autre signe</b> évoque en priorité le <b>syndrome de chute de ponte EDS-76</b>, qui n\'est pas une affection respiratoire. Demander une <b>IHA EDS-76</b> (le virus est hémagglutinant) et vérifier la présence du vaccin inactivé pré-ponte.</p></div>';
+  }
+  top.forEach((k,i)=>{
+    const pc=Math.round(w(s[k])/tot*100);
+    html+=`<div class="res ${i===0?'r1':''}">
+      <p class="rang">Hypothèse ${i+1}${i===0?' — la plus probable':''}${D[k].mdo?' · <b style="color:#9E2B25">DÉCLARATION OBLIGATOIRE</b>':''}</p>
+      <h4>${D[k].n}</h4>
+      <p class="pc">Vraisemblance relative : ${pc} %</p>
+      <dl>
+        <dt>Test de confirmation</dt><dd>${D[k].test}</dd>
+        <dt>Conduite à tenir</dt><dd>${D[k].act}</dd>
+      </dl></div>`;
+  });
+  html+=`<div class="recap">
+    <p style="font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gris);margin-bottom:10px">Dans tous les cas — les six gestes à faire aujourd'hui</p>
+    <ol style="margin-bottom:0">
+      <li><b>Autopsier 5 à 10 sujets malades euthanasiés</b>, jamais des cadavres de plus de 4 heures, plus 1 à 2 sujets sains comme témoins.</li>
+      <li><b>Prélever avant de disséquer</b> : écouvillons trachéaux et choanaux + cloacaux en milieu de transport viral, organes fermés pour la bactériologie, 20 sérums.</li>
+      <li><b>Mesurer le NH₃ et le CO₂ à 20–30 cm du sol</b> et contrôler la dépression et la trajectoire d'air à la fumée.</li>
+      <li><b>Relever les courbes</b> d'eau, d'aliment, de poids et de mortalité journalière : leur divergence date l'événement déclencheur.</li>
+      <li><b>Ne pas traiter avant d'avoir identifié la cause primaire</b> — la colibacillose est presque toujours secondaire.</li>
+      <li><b>Vérifier les temps d'attente</b> avant tout traitement si l'abattage ou la collecte des œufs est proche.</li>
+    </ol></div>
+    <div class="nav">
+      <button class="btn sec" id="back">← Modifier mes réponses</button>
+      <button class="btn" onclick="window.print()">Imprimer la synthèse</button>
+      <button class="btn sec" onclick="location.reload()">Recommencer</button>
+    </div>`;
+  const r=document.getElementById('rapport');
+  r.innerHTML=html; r.classList.add('on');
+  document.getElementById('back').onclick=()=>{r.classList.remove('on');cur=Q.length-1;renderQ();renderPanel();};
+}
+
+renderQ(); renderPanel();
+</script>
+</body>
+</html>
